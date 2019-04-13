@@ -17,8 +17,8 @@ from model import ACModel
 parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
 parser.add_argument("--algo", required=True,
                     help="algorithm to use: a2c | ppo (REQUIRED)")
-parser.add_argument("--env", required=True,
-                    help="name of the environment to train on (REQUIRED)")
+parser.add_argument("--env", nargs='+', type=str, required=True,
+                    help="name of the environment(s) to train on (REQUIRED)")
 parser.add_argument("--model", default=None,
                     help="name of the model (default: {ENV}_{ALGO}_{TIME})")
 parser.add_argument("--seed", type=int, default=1,
@@ -92,7 +92,7 @@ utils.seed(args.seed)
 
 envs = []
 for i in range(args.procs):
-    env = gym.make(args.env)
+    env = gym.make(args.env[i % len(args.env)])
     env.seed(args.seed + 10000*i)
     envs.append(env)
 
